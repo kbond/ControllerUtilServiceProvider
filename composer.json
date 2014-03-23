@@ -17,7 +17,8 @@
     },
     "require-dev": {
         "twig/twig": "~1.15",
-        "symfony/browser-kit": "~2.3"
+        "symfony/browser-kit": "~2.3",
+        "jms/serializer": "~0.15"
     },
     "autoload": {
         "psr-0": { "Zenstruck": "src/" }

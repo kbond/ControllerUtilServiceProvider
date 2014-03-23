@@ -2,6 +2,7 @@
 
 namespace Zenstruck\ControllerUtil\Silex;
 
+use JMS\Serializer\SerializerInterface;
 use Silex\Application;
 use Silex\ServiceProviderInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -11,6 +12,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Zenstruck\ControllerUtil\EventListener\ForwardListener;
 use Zenstruck\ControllerUtil\EventListener\HasFlashesListener;
 use Zenstruck\ControllerUtil\EventListener\RedirectListener;
+use Zenstruck\ControllerUtil\EventListener\SerializerViewListener;
 use Zenstruck\ControllerUtil\EventListener\TwigViewListener;
 
 /**
@@ -52,6 +54,11 @@ class ControllerUtilServiceProvider implements ServiceProviderInterface
             : null
         ;
 
+        $serializer = isset($app['serializer']) && $app['serializer'] instanceof SerializerInterface
+            ? $app['serializer']
+            : null
+        ;
+
         $eventDispatcher->addListener(
             KernelEvents::VIEW,
             array(new ForwardListener(), 'onKernelView')
@@ -76,6 +83,14 @@ class ControllerUtilServiceProvider implements ServiceProviderInterface
             $eventDispatcher->addListener(
                 KernelEvents::VIEW,
                 array(new TwigViewListener($twig), 'onKernelView')
+            );
+        }
+
+        if ($serializer) {
+            $eventDispatcher->addListener(
+                KernelEvents::VIEW,
+                array(new SerializerViewListener($serializer), 'onKernelView'),
+                5
             );
         }
     }

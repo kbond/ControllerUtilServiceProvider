@@ -2,6 +2,7 @@
 
 namespace Zenstruck\ControllerUtil\Tests\Silex;
 
+use JMS\Serializer\SerializerBuilder;
 use Silex\Application;
 use Silex\Provider\SessionServiceProvider;
 use Silex\Provider\TwigServiceProvider;
@@ -36,6 +37,7 @@ class ControllerUtilServiceProviderTest extends \PHPUnit_Framework_TestCase
         $app->register(new UrlGeneratorServiceProvider());
         $app->register(new SessionServiceProvider());
         $app->register(new ControllerUtilServiceProvider());
+        $app['serializer'] = SerializerBuilder::create()->build();
         $app['session.test'] = true;
         $app->boot();
 
@@ -43,10 +45,11 @@ class ControllerUtilServiceProviderTest extends \PHPUnit_Framework_TestCase
         $eventDispatcher = $app['dispatcher'];
         $viewListeners = $eventDispatcher->getListeners(KernelEvents::VIEW);
 
-        $this->assertCount(5, $viewListeners);
+        $this->assertCount(6, $viewListeners);
         $this->assertInstanceOf('Zenstruck\ControllerUtil\EventListener\HasFlashesListener', $viewListeners[0][0]);
-        $this->assertInstanceOf('Zenstruck\ControllerUtil\EventListener\ForwardListener', $viewListeners[1][0]);
-        $this->assertInstanceOf('Zenstruck\ControllerUtil\EventListener\RedirectListener', $viewListeners[2][0]);
-        $this->assertInstanceOf('Zenstruck\ControllerUtil\EventListener\TwigViewListener', $viewListeners[3][0]);
+        $this->assertInstanceOf('Zenstruck\ControllerUtil\EventListener\SerializerViewListener', $viewListeners[1][0]);
+        $this->assertInstanceOf('Zenstruck\ControllerUtil\EventListener\ForwardListener', $viewListeners[2][0]);
+        $this->assertInstanceOf('Zenstruck\ControllerUtil\EventListener\RedirectListener', $viewListeners[3][0]);
+        $this->assertInstanceOf('Zenstruck\ControllerUtil\EventListener\TwigViewListener', $viewListeners[4][0]);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Zenstruck\ControllerUtil\Tests\Silex;
 
+use JMS\Serializer\SerializerBuilder;
 use Silex\Application;
 use Silex\Provider\SessionServiceProvider;
 use Silex\Provider\TwigServiceProvider;
@@ -56,12 +57,27 @@ class FunctionalTest extends WebTestCase
         $this->assertSame('Redirected with "info" flash: "This is a flash message."', $client->getResponse()->getContent());
     }
 
-    public function testView()
+    /**
+     * @dataProvider viewDataProvider
+     */
+    public function testView($uri, $expectedContent, $expectedContentType)
     {
         $client = $this->createClient();
-        $client->request('GET', '/view');
+        $client->request('GET', $uri);
+        $response = $client->getResponse();
 
-        $this->assertSame("This is a rendered view with data: foo\n", $client->getResponse()->getContent());
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame($expectedContent, $response->getContent());
+        $this->assertSame($expectedContentType, $response->headers->get('content-type'));
+    }
+
+    public function viewDataProvider()
+    {
+        return array(
+            array('/view', "This is a rendered view with data: foo\n", 'text/html; charset=UTF-8'),
+            array('/view.json', '"foo"', 'application/json'),
+            array('/view.xml', "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<result><![CDATA[foo]]></result>\n", 'text/xml; charset=UTF-8')
+        );
     }
 
     /**
@@ -74,6 +90,7 @@ class FunctionalTest extends WebTestCase
         $app->register(new UrlGeneratorServiceProvider());
         $app->register(new SessionServiceProvider());
         $app->register(new ControllerUtilServiceProvider());
+        $app['serializer'] = SerializerBuilder::create()->build();
         $app['debug'] = true;
         $app['session.test'] = true;
         $app['exception_handler']->disable();
@@ -104,10 +121,10 @@ class FunctionalTest extends WebTestCase
             }
         )->bind('redirect_endpoint');
 
-        $app->get('/view', function () {
+        $app->get('/view.{_format}', function () {
                 return new Template('view.html.twig', 'foo');
             }
-        )->bind('view');
+        )->bind('view')->assert('_format', 'html|json|xml')->value('_format', 'html');
 
         return $app;
     }
