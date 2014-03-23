@@ -1,0 +1,25 @@
+{
+    "name": "zenstruck/controller-util-service-provider",
+    "description": "Silex ServiceProvider for zenstruck/controller-util",
+    "keywords": ["controller", "silex"],
+    "homepage": "https://github.com/kbond/ControllerUtilServiceProvider",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Kevin Bond",
+            "email": "kevinbond@gmail.com"
+        }
+    ],
+    "require": {
+        "zenstruck/controller-util": "dev-master",
+        "silex/silex": "~1.0"
+    },
+    "require-dev": {
+        "twig/twig": "~1.15",
+        "symfony/browser-kit": "~2.3"
+    },
+    "autoload": {
+        "psr-0": { "Zenstruck": "src/" }
+    }
+}
