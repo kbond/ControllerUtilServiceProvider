@@ -2,7 +2,7 @@
     "name": "zenstruck/controller-util-service-provider",
     "description": "Silex ServiceProvider for zenstruck/controller-util",
     "keywords": ["controller", "silex"],
-    "homepage": "https://github.com/kbond/ControllerUtilServiceProvider",
+    "homepage": "http://zenstruck.com/projects/ControllerUtilServiceProvider",
     "type": "library",
     "license": "MIT",
     "authors": [
