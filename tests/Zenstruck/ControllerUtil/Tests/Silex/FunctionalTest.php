@@ -28,11 +28,14 @@ class FunctionalTest extends WebTestCase
         $this->assertSame('Forwarded.', $client->getResponse()->getContent());
     }
 
-    public function testRedirect()
+    /**
+     * @dataProvider redirectDataProvider
+     */
+    public function testRedirect($uri, $expectedContent)
     {
         $client = $this->createClient();
         $client->followRedirects(false);
-        $client->request('GET', '/redirect');
+        $client->request('GET', $uri);
         $response = $client->getResponse();
 
         $this->assertTrue($response->isRedirect('/redirect-endpoint'));
@@ -40,24 +43,7 @@ class FunctionalTest extends WebTestCase
 
         $client->followRedirect();
 
-        $this->assertSame('Redirected.', $client->getResponse()->getContent());
-    }
-
-    public function testFlashRedirect()
-    {
-        $client = $this->createClient();
-        $client->request('GET', '/flash-redirect');
-        $response = $client->getResponse();
-
-        $this->assertTrue($response->isRedirect('/redirect-endpoint'));
-        $this->assertSame(302, $response->getStatusCode());
-
-        $client->followRedirect();
-
-        $this->assertSame(
-            'Redirected with "info" flash: "This is a flash message."',
-            $client->getResponse()->getContent()
-        );
+        $this->assertSame($expectedContent, $client->getResponse()->getContent());
     }
 
     /**
@@ -72,6 +58,14 @@ class FunctionalTest extends WebTestCase
         $this->assertSame(200, $response->getStatusCode());
         $this->assertSame($expectedContent, $response->getContent());
         $this->assertSame($expectedContentType, $response->headers->get('content-type'));
+    }
+
+    public function redirectDataProvider()
+    {
+        return array(
+            array('/redirect', 'Redirected.'),
+            array('/flash-redirect', 'Redirected with "info" flash: "This is a flash message."')
+        );
     }
 
     public function viewDataProvider()
