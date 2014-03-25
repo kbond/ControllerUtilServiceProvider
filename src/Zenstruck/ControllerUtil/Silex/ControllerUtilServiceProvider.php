@@ -94,5 +94,4 @@ class ControllerUtilServiceProvider implements ServiceProviderInterface
             );
         }
     }
-
 }

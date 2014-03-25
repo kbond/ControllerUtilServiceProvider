@@ -54,7 +54,10 @@ class FunctionalTest extends WebTestCase
 
         $client->followRedirect();
 
-        $this->assertSame('Redirected with "info" flash: "This is a flash message."', $client->getResponse()->getContent());
+        $this->assertSame(
+            'Redirected with "info" flash: "This is a flash message."',
+            $client->getResponse()->getContent()
+        );
     }
 
     /**
@@ -76,7 +79,11 @@ class FunctionalTest extends WebTestCase
         return array(
             array('/view', "This is a rendered view with data: foo\n", 'text/html; charset=UTF-8'),
             array('/view.json', '"foo"', 'application/json'),
-            array('/view.xml', "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<result><![CDATA[foo]]></result>\n", 'text/xml; charset=UTF-8')
+            array(
+                '/view.xml',
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<result><![CDATA[foo]]></result>\n",
+                'text/xml; charset=UTF-8'
+            )
         );
     }
 
@@ -96,7 +103,9 @@ class FunctionalTest extends WebTestCase
         $app['exception_handler']->disable();
 
         $app->get('/forward', function () {
-                return new Forward(function () { return new Response('Forwarded.'); });
+                return new Forward(function () {
+                    return new Response('Forwarded.');
+                });
             }
         )->bind('forward');
 
@@ -114,7 +123,9 @@ class FunctionalTest extends WebTestCase
                 $flashBag = $app['session']->getFlashBag();
 
                 if ($flashBag->has('info')) {
-                    return new Response(sprintf('Redirected with "info" flash: "%s"', implode($flashBag->get('info'))));
+                    return new Response(
+                        sprintf('Redirected with "info" flash: "%s"', implode('', $flashBag->get('info')))
+                    );
                 }
 
                 return new Response('Redirected.');
