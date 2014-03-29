@@ -7,3 +7,18 @@
 [![Latest Stable Version](https://poser.pugx.org/zenstruck/controller-util-service-provider/v/stable.png)](https://packagist.org/packages/zenstruck/controller-util-service-provider)
 [![Latest Unstable Version](https://poser.pugx.org/zenstruck/controller-util-service-provider/v/unstable.png)](https://packagist.org/packages/zenstruck/controller-util-service-provider)
 [![License](https://poser.pugx.org/zenstruck/controller-util-service-provider/license.png)](https://packagist.org/packages/zenstruck/controller-util-service-provider)
+
+This Service Provider integrates the [zenstruck/controller-util](https://github.com/kbond/ControllerUtil) library
+into your Silex project.  **For usage, see its documentation.**
+
+## Installation
+
+Require this library with composer:
+
+    composer require zenstruck/controller-util-service-provider:~0.1
+
+In your app, register this service provider:
+
+```php
+$app->register(new \Zenstruck\ControllerUtil\Silex\ControllerUtilServiceProvider());
+```
