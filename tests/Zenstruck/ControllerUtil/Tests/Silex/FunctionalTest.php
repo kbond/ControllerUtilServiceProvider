@@ -64,7 +64,7 @@ class FunctionalTest extends WebTestCase
     {
         return array(
             array('/redirect', 'Redirected.'),
-            array('/flash-redirect', 'Redirected with "info" flash: "This is a flash message."')
+            array('/flash-redirect', 'Redirected with "info" flash: "This is a flash message."'),
         );
     }
 
@@ -76,8 +76,8 @@ class FunctionalTest extends WebTestCase
             array(
                 '/view.xml',
                 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<result><![CDATA[foo]]></result>\n",
-                'text/xml; charset=UTF-8'
-            )
+                'text/xml; charset=UTF-8',
+            ),
         );
     }
 
